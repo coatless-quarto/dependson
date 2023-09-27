@@ -1,6 +1,12 @@
-# dependson Extension for Quarto
+# dependson: A Quarto Experiment on Dependencies
 
-The `dependson` extension provides a convenient way to share variables and functions between Lua filters in the Quarto document generation system. This functionality can be useful within a single extension or even across different extensions.
+The `dependson` extension is an experiment designed to explore variables and functions between Lua filters in the Quarto document generation system. This functionality can be useful within a single extension or even across different extensions.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/coatless-quarto/dependson)
+
+## Usage
+
+It's important to note that the `dependson` extension doesn't introduce any significant improvements to your document content. Instead, it serves as a valuable example of how to reuse code and share variables and functions between different Lua filters.
 
 ## Installation
 
@@ -12,9 +18,6 @@ quarto add coatless-quarto/dependson
 
 This command will download and install the extension under the `_extensions` subdirectory of your Quarto project. If you're using version control, make sure to include this directory in your repository.
 
-## Usage
-
-It's important to note that the `dependson` extension doesn't introduce any significant improvements to your document content. Instead, it serves as a valuable example of how to reuse code and share variables and functions between different Lua filters.
 
 ## Nesting Extensions
 

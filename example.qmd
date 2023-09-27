@@ -1,0 +1,9 @@
+---
+title: "Dependson Example"
+filters:
+  - dependson
+---
+
+This extension will only output values in the Terminal to highlight the different module imports are working.
+
+

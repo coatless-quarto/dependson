@@ -1,25 +1,79 @@
-# Quarto Extension Development with Lua in a Devcontainer
+# dependson Extension for Quarto
 
-This repository houses a devcontainer that setups a [Quarto extension development environment](https://quarto.org/docs/extensions/lua.html). The container is setup to work with [GitHub Codespaces](https://github.com/features/codespaces) to instantly have a cloud-based developer workflow.
+The `dependson` extension provides a convenient way to share variables and functions between Lua filters in the Quarto document generation system. This functionality can be useful within a single extension or even across different extensions.
 
-You can try out the Codespace by clicking on the following button:
+## Installation
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/coatless-devcontainer/quarto-extension-dev?quickstart=1)
+To install the `dependson` extension, open your terminal and execute the following command:
 
-**Note:** Codespaces are available to Students and Teachers for free [up to 180 core hours per month](https://docs.github.com/en/education/manage-coursework-with-github-classroom/integrate-github-classroom-with-an-ide/using-github-codespaces-with-github-classroom#about-github-codespaces) through [GitHub Education](https://education.github.com/). Otherwise, you will have [up to 60 core hours and 15 GB free per month](https://github.com/features/codespaces#pricing).
+```bash
+quarto add coatless-quarto/dependson
+```
 
-The devcontainer contains:
+This command will download and install the extension under the `_extensions` subdirectory of your Quarto project. If you're using version control, make sure to include this directory in your repository.
 
-- The latest [pre-release](https://quarto.org/docs/download/prerelease) version of Quarto.
-- [Quarto VS Code Extension](https://marketplace.visualstudio.com/items?itemName=quarto.quarto).
-- [Lua LSP VS Code Extension](https://marketplace.visualstudio.com/items?itemName=sumneko.lua) for Lua code intelligence.
-- [GitHub copilot VS Code Extension](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot).
-- `R` and `Python`
-- `knitr` and `jupyter`
+## Usage
 
-## References
+It's important to note that the `dependson` extension doesn't introduce any significant improvements to your document content. Instead, it serves as a valuable example of how to reuse code and share variables and functions between different Lua filters.
 
-- [Quarto: Lua API Reference](https://quarto.org/docs/extensions/lua-api.html)
-- [Quarto: Lua Development](https://quarto.org/docs/extensions/lua.html)
-- [Pandoc: Lua Filters](https://pandoc.org/lua-filters.html)
-- [Lua: Manual](https://www.lua.org/manual/5.4/)
+## Nesting Extensions
+
+Let's explore a folder structure that demonstrates the versatility of the `dependson` extension:
+
+```sh
+.
+├── example.qmd
+├── _extensions
+│   └── dependson
+│       ├── dependson.lua
+│       ├── _extensions
+│       │   └── coatless-quarto
+│       │       └── thedependency
+│       │           ├── _extension.yml
+│       │           └── thedependency.lua
+│       ├── _extension.yml
+│       ├── next-level
+│       │   └── nested.lua
+│       └── same-directory.lua
+└── README.md
+```
+
+In this directory structure:
+
+1. The `dependson` extension consists of multiple Lua files located in different directories.
+2. We have an extension called `thedependency` nested within the main `dependson` extension.
+
+Now, let's see how we can retrieve values from the `next-level/nested.lua` module and the `thedependency` extension.
+
+### Retrieving Values from Lua Modules
+
+To retrieve global variables (excluding those declared with the `local` keyword), you can use the `require` function to load the lua file containing the variable. In this example, the `dependson.lua` extension loads the `same-level.lua` module with `require("same-level")` and the `nested.lua` module using `require("next-level/nested.lua")`. This makes available the globally defined variables for output.
+
+```lua
+-- Check global variable definitions (e.g. no local prefixed to variable)
+
+-- Check to see if the nested value is present in the global space
+local my_level = require("same-directory")
+
+-- Check to see if the same value is present
+quarto.log.output(same_level_value)
+```
+
+### Retrieving Values from Extensions
+
+For extensions, you can access functions as follows:
+
+```lua
+-- Store function calls in a table value
+local dependency = require("_extensions.coatless-quarto.thedependency.thedependency")
+
+-- Call the function defined in the separate Lua file
+dependency.check_function()
+```
+
+This code demonstrates how to import and use functions defined in the `thedependency` extension within your Lua code.
+
+
+# Fin
+
+By using these techniques, you can efficiently share code and data between different parts of your Quarto extensions.
